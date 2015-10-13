@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BacoTest</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="open">OPEN</string>
+    <string name="close">CLOSE</string>
+
+
+</resources>
