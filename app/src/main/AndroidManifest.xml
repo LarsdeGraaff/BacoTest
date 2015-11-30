@@ -44,6 +44,7 @@
         <activity android:name=".Activities.RegistrationActivity"/>
         <activity android:name=".Activities.ForgotPasswordActivity"/>
         <activity android:name=".Activities.BerichtDetailActivity"/>
+        <activity android:name=".Activities.BerichtAddActivity" />
 
 
     </application>

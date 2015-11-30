@@ -8,6 +8,7 @@ public class Berichten {
     private String titel;
     private String inleiding;
     private String bericht;
+    private String userId;
     private int aantalReacties;
 
     public Berichten() {
@@ -46,5 +47,11 @@ public class Berichten {
         this.bericht = bericht;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -15,8 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -24,6 +28,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.w3c.dom.Text;
 
@@ -38,6 +43,7 @@ import ldg.bacotest.entities.Reacties;
  * Created by Lars on 8/10/2015.
  */
 public class BerichtDetailActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     /** Initialize navigation Drawer*/
     private DrawerLayout bacoDrawerLayout;
     private String mActivityTitle;
@@ -52,6 +58,11 @@ public class BerichtDetailActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager reactieLayoutManager;
 
     private String berichtenObjectId;
+
+    /** declare for reactiePost*/
+    private String berichtenId;
+    private EditText editTextReactie;
+    private Button buttonReactiePost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +80,9 @@ public class BerichtDetailActivity extends AppCompatActivity {
         addDawerItems();
         setupDrawer();
 
+        /* toolbar */
+        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -83,6 +97,48 @@ public class BerichtDetailActivity extends AppCompatActivity {
                     BerichtenObjectWasRetrievedSuccessfully(object);
                 } else {
                     Log.e("error retrieving player", "The specified player with id " + berichtenObjectId + " could not be retrieved.");
+                }
+            }
+        });
+
+        /** */
+        editTextReactie= (EditText) findViewById(R.id.editText_reactie);
+        buttonReactiePost= (Button) findViewById(R.id.button_reactie);
+
+
+
+        buttonReactiePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputReactie=editTextReactie.getText().toString();
+
+                if (TextUtils.isEmpty(inputReactie)){
+                    editTextReactie.setError("Reactie can't be empty");
+                }
+                else {
+                    ParseObject parseObject=new ParseObject("Reacties");
+                    parseObject.put("reactie",inputReactie);
+
+                    ParseObject bericht=ParseObject.createWithoutData("Berichten",berichtenObjectId);
+                    parseObject.put("berichtId", bericht);
+                    ParseUser user=ParseUser.getCurrentUser();
+
+                    if (user != null) {
+                        parseObject.put("userId", user);
+                    } else {
+                        ParseUser unknownUser = new ParseUser();
+                        unknownUser.setUsername("Username is unknown");
+
+                        parseObject.put("user", unknownUser);
+                    }
+
+                    parseObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            Toast.makeText(getBaseContext(),"Reactie has been added",Toast.LENGTH_LONG);
+                            finish();
+                        }
+                    });
                 }
             }
         });
@@ -145,20 +201,19 @@ public class BerichtDetailActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> reacties, ParseException e) {
-                if (e==null){
+                if (e == null) {
                     for (ParseObject reactie : reacties) {
                         ParseObject parseObjectBerichtId = (ParseObject) reactie.get("berichtId");
                         String berichtId = parseObjectBerichtId.getObjectId().toString();
-                        if (berichtenObjectId.equals(berichtId)){
-                            String stringReactie=reactie.get("reactie").toString();
-                            String objectId=reactie.getObjectId();
+                        if (berichtenObjectId.equals(berichtId)) {
+                            String stringReactie = reactie.get("reactie").toString();
+                            String objectId = reactie.getObjectId();
 
                             ParseUser userObject = (ParseUser) reactie.get("userId");
-                            String userId=userObject.getObjectId();
+                            String userId = userObject.getObjectId();
 
 
-
-                            Reacties newReacties=new Reacties();
+                            Reacties newReacties = new Reacties();
                             newReacties.setReactie(stringReactie);
                             newReacties.setObjectId(objectId);
 
@@ -177,13 +232,12 @@ public class BerichtDetailActivity extends AppCompatActivity {
                             parsedReactiesForBericht.add(newReacties);
                         }
                     }
-                    dataReactiesList=parsedReactiesForBericht;
-                }
-                else{
+                    dataReactiesList = parsedReactiesForBericht;
+                } else {
                     Log.e("retrieving error", "Shit went wrong when trying to get reacties from Parse.com");
                 }
-            reactieAdapter=new ReactiesAdapter(dataReactiesList,getBaseContext());
-            reactieLayoutManager=new LinearLayoutManager(getBaseContext());
+                reactieAdapter = new ReactiesAdapter(dataReactiesList, getBaseContext());
+                reactieLayoutManager = new LinearLayoutManager(getBaseContext());
                 reactieRecyclerView.setLayoutManager(reactieLayoutManager);
                 reactieRecyclerView.setAdapter(reactieAdapter);
             }
@@ -255,4 +309,6 @@ public class BerichtDetailActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+
 }

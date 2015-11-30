@@ -39,8 +39,10 @@ public class BerichtAdapter extends RecyclerView.Adapter<BerichtAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Berichten bericht = mDataSet.get(position);
+        holder.textViewBerichtUser.setText(bericht.getUserId());
         holder.textViewBerichtTitel.setText(bericht.getTitel());
         holder.textViewBerichtInleiding.setText(bericht.getInleiding());
+
     }
 
     @Override
@@ -51,10 +53,11 @@ public class BerichtAdapter extends RecyclerView.Adapter<BerichtAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView textViewBerichtTitel;
         private TextView textViewBerichtInleiding;
+        private TextView textViewBerichtUser;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
+            textViewBerichtUser = (TextView) itemView.findViewById(R.id.textview_home_bericht_user);
             textViewBerichtTitel = (TextView) itemView.findViewById(R.id.textview_home_bericht_titel);
             textViewBerichtInleiding = (TextView) itemView.findViewById(R.id.textview_home_bericht_inleiding);
             itemView.setOnClickListener(this);
@@ -63,12 +66,13 @@ public class BerichtAdapter extends RecyclerView.Adapter<BerichtAdapter.ViewHold
         @Override
         public void onClick(View v) {
 
-            Intent intent=new Intent(context, BerichtDetailActivity.class);
-            Berichten berichten=mDataSet.get(this.getLayoutPosition());
+            Intent intent = new Intent(context, BerichtDetailActivity.class);
+            Berichten berichten = mDataSet.get(this.getLayoutPosition());
             intent.putExtra("objectId", berichten.getObjectId());
-            intent.putExtra("titel",berichten.getTitel());
-            intent.putExtra("inleiding",berichten.getInleiding());
-            intent.putExtra("bericht",berichten.getBericht());
+            intent.putExtra("titel", berichten.getTitel());
+            intent.putExtra("inleiding", berichten.getInleiding());
+            intent.putExtra("bericht", berichten.getBericht());
+            intent.putExtra("userId", berichten.getUserId());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
