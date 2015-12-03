@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import ldg.bacotest.R;
  * Created by Lars on 5/10/2015.
  */
 public class RangschikkingActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     /** Initialize navigation Drawer*/
     private ArrayAdapter<String> bacoAdapter;
     private DrawerLayout bacoDrawerLayout;
@@ -39,6 +41,9 @@ public class RangschikkingActivity extends AppCompatActivity {
         addDrawerItems();
         setupDrawerItems();
 
+        /* toolbar */
+        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
@@ -106,7 +111,7 @@ public class RangschikkingActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_log_in, menu);
+        getMenuInflater().inflate(R.menu.menu_rangschikking, menu);
         return true;
     }
 
