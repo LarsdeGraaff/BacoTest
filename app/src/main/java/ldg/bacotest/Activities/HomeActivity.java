@@ -1,7 +1,11 @@
 package ldg.bacotest.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,6 +30,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +43,7 @@ import ldg.bacotest.entities.Speler;
  * Created by Lars on 5/10/2015.
  */
 public class HomeActivity extends AppCompatActivity {
+    private View view;
     private Toolbar toolbar;
     private String userName;
     /**
@@ -98,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
                         String titel = bericht.get("titel").toString();
                         String berichtInleiding = bericht.get("inleiding").toString();
                         String berichtContent = bericht.get("bericht").toString();
+                        String berichtTimestamp=bericht.getCreatedAt().toString();
                         String objectId = bericht.getObjectId();
 
 
@@ -123,6 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                         newBericht.setTitel(titel);
                         newBericht.setBericht(berichtContent);
                         newBericht.setInleiding(berichtInleiding);
+                        newBericht.setTimestamp(berichtTimestamp);
                         newBericht.setObjectId(objectId);
                         parsedBericht.add(newBericht);
                     }
@@ -144,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
      * Add items to the drawerlist
      */
     private void addDawerItems() {
-        String[] navigationMenuArray = {"HOME", "SPELERS", "KALENDER", "RANGSCHIKKING"};
+        String[] navigationMenuArray = {"HOME", "SPELERS", "KALENDER", "RANGSCHIKKING","LOG OUT"};
         bacoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navigationMenuArray);
         bacoDrawerList.setAdapter(bacoAdapter);
         bacoDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,6 +171,8 @@ public class HomeActivity extends AppCompatActivity {
                     case 3:
                         rangschikkingActivity(view);
                         break;
+                    case 4:
+                        logOut(view);
 
 
                     default:
@@ -218,23 +228,27 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (bacoDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
-
+        int id = item.getItemId();
 
         switch(item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_settings_login:
                 return true;
 
             case R.id.action_new_message:
-                Toast.makeText(getBaseContext(),"Nieuw bericht",Toast.LENGTH_LONG);
+                Toast.makeText(getBaseContext(),"Nieuw bericht",Toast.LENGTH_LONG).show();
+                goToNieuwBericht(view);
                 return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
 
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -269,6 +283,21 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, BerichtAddActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    //logout function
+    public void logOut(View view){
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        SharedPreferences stayLoggedIn = getBaseContext().getSharedPreferences("stay logged in", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = stayLoggedIn.edit();
+
+        editor.putString("username", "");
+        editor.putString("password", "");
+        editor.commit();
+
+        currentUser.logOut();
+        Intent intent = new Intent(getBaseContext(), LogInActivity.class);
+        startActivity(intent);
     }
 
 }
