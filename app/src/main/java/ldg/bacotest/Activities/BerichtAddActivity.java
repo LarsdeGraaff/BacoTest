@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,8 +29,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,6 +49,7 @@ import ldg.bacotest.R;
  */
 public class BerichtAddActivity extends AppCompatActivity {
     private Toolbar toolbar;
+    private ParseFile photoFile;
 
 
     /**
@@ -54,6 +59,7 @@ public class BerichtAddActivity extends AppCompatActivity {
     private EditText editTextAddBerichtContent;
     private EditText editTextAddBerichtInleiding;
     private Button buttonPostBericht;
+    private Button confirmPicture;
     private ImageView imageViewFoto;
 
     /**
@@ -90,8 +96,23 @@ public class BerichtAddActivity extends AppCompatActivity {
         editTextAddBerichtInleiding = (EditText) findViewById(R.id.editText_bericht_add_inleiding);
         buttonPostBericht = (Button) findViewById(R.id.button_add_bericht_post_bericht);
         imageViewFoto = (ImageView) findViewById(R.id.imageViewTakenPicture);
+        confirmPicture = (Button) findViewById(R.id.button_confirm_picture);
 
+        confirmPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Locate the image in res > drawable-hdpi
+                Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(imageViewFoto));
+                // Convert it to byte
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Compress image to lower quality scale 1 - 100
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
 
+                // Create the ParseFile
+
+            }
+        });
 
 
         /** Commit post message*/
@@ -117,12 +138,11 @@ public class BerichtAddActivity extends AppCompatActivity {
                 } else {
 
 
-
                     ParseObject parseObject = new ParseObject("Berichten");
                     parseObject.put("titel", editTextAddBerichtTitel.getText().toString());
                     parseObject.put("inleiding", editTextAddBerichtInleiding.getText().toString());
                     parseObject.put("bericht", editTextAddBerichtContent.getText().toString());
-                   // parseObject.put("fotoBericht",file);
+                    // parseObject.put("fotoBericht",file);
 
 
                     ParseUser user = ParseUser.getCurrentUser();
@@ -135,7 +155,7 @@ public class BerichtAddActivity extends AppCompatActivity {
                         parseObject.put("userId", unknownUser);
                     }
 
-                    String usernamefornotification=user.getUsername();
+                    String usernamefornotification = user.getUsername();
 
                     /** notification when post new message*/
                     // build notification
@@ -201,7 +221,9 @@ public class BerichtAddActivity extends AppCompatActivity {
 
     }
 
-    /** Take picture or go to gallery*/
+    /**
+     * Take picture or go to gallery
+     */
 
 
     private Uri fileUri;
@@ -232,7 +254,7 @@ public class BerichtAddActivity extends AppCompatActivity {
             case SELECT_PHOTO:
 
 
-                if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && null!= data) {
+                if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && null != data) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -255,8 +277,20 @@ public class BerichtAddActivity extends AppCompatActivity {
                         // Image captured and saved to fileUri specified in the Intent
                         Toast.makeText(this, "Image saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
                         Bitmap bitmapPhoto = (Bitmap) data.getExtras().get("data");
-                        imageViewFoto.setImageBitmap(bitmapPhoto);
+                        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+                        bitmapPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] dataPhoto=stream.toByteArray();
 
+
+                        ParseFile file=new ParseFile("foto.jpg",dataPhoto);
+                        file.saveInBackground();
+
+                        ParseObject foto= new ParseObject("BerichtFoto");
+                        foto.put("picture",file);
+                        foto.saveInBackground();
+
+
+                        imageViewFoto.setImageBitmap(bitmapPhoto);
 
 
                     } else if (resultCode == RESULT_CANCELED) {
@@ -268,6 +302,10 @@ public class BerichtAddActivity extends AppCompatActivity {
 
         }
     }
+
+
+
+
 
     /**
      * Add items to the drawerlist
