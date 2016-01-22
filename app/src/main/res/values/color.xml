@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="ColorPrimary">#FF5722</color>
-    <color name="ColorPrimaryDark">#E64A19</color>
+    <color name="ColorPrimary">#35449C</color>
+    <color name="ColorPrimaryDark">#1D2D8A</color>
+    <color name="randomcolorforcard">#8DBAC9</color>
 </resources>

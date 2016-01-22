@@ -4,89 +4,183 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view_speler_detail"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:foregroundGravity="center"
+        android:textAlignment="center"
+        card_view:cardCornerRadius="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        >
 
-
-        <TextView
-            android:id="@+id/textview_detail_speler_voornaam"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Voornaam"
-            android:textSize="30sp" />
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  "
-            android:textSize="30sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textview_detail_speler_naam"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Achternaam"
-            android:textSize="20sp" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/textview_detail_speler_voornaam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Voornaam"
+                    android:textSize="30sp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/textview_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  "
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/textview_detail_speler_naam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Achternaam"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Positie:" />
+
+                <TextView
+                    android:id="@+id/textview_detail_positie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Positie"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Voet:" />
+
+                <TextView
+                    android:id="@+id/textview_detail_voet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Voet"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leeftijd:" />
+
+                <TextView
+                    android:id="@+id/textview_detail_leeftijd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leeftijd"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view_speler_stats"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:foregroundGravity="center"
+        android:textAlignment="center"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardBackgroundColor="@color/randomcolorforcard"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        >
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Positie:" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_detail_positie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Positie"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Statistieken van de speler"
+                android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Voet:" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="        Tegenstander            "
+                    android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textview_detail_voet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Voet"
-            android:textSize="20sp"/>
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="            goals      "
+                    android:textStyle="bold" />
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="               assists"
+                    android:textStyle="bold"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Leeftijd:" />
+                    />
 
-        <TextView
-            android:id="@+id/textview_detail_leeftijd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Leeftijd"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view_speler_stats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

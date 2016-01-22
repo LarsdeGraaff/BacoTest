@@ -1,8 +1,11 @@
 package ldg.bacotest.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import ldg.bacotest.R;
@@ -33,6 +38,42 @@ public class LogInActivity extends AppCompatActivity {
         loginWachtwoordTextField = (EditText) findViewById(R.id.login_wachtwoord_edittext);
         logInButton = (Button) findViewById(R.id.login_button);
 
+        //shared preferences for login
+        final SharedPreferences stayLoggedIn = getBaseContext().getSharedPreferences("stay logged in", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = stayLoggedIn.edit();
+        usernametxt = stayLoggedIn.getString("username", "");
+        passwordtxt = stayLoggedIn.getString("password", "");
+
+        //log in background with shared preferences
+        if (!TextUtils.isEmpty(stayLoggedIn.getString("username", "")) && !TextUtils.isEmpty(stayLoggedIn.getString("password", ""))) {
+
+            ParseUser.logInInBackground(usernametxt, passwordtxt, new LogInCallback() {
+                        @Override
+                        public void done(ParseUser parseUser, ParseException e) {
+                            if (parseUser != null) {
+                                Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+                                startActivity(intent);
+                                Toast.makeText(getBaseContext(), " Succesfully logged in.", Toast.LENGTH_SHORT).show();
+                                editor.putString("username", usernametxt);
+                                editor.putString("password", passwordtxt);
+                                editor.commit();
+
+                                //startActivity(intent);
+                                finish();
+                            }
+
+                            else {
+                                Toast.makeText(getBaseContext(), " The username and password don't seem to match.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+
+                    }
+
+            );
+        }
+
+
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +89,11 @@ public class LogInActivity extends AppCompatActivity {
                         if (parseUser != null) {
 
                             Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+
+                            editor.putString("username", usernametxt);
+                            editor.putString("password", passwordtxt);
+                            editor.commit();
+
                             startActivity(intent);
                             finish();
 

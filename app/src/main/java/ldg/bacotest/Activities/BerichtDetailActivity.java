@@ -56,7 +56,6 @@ public class BerichtDetailActivity extends AppCompatActivity {
     private RecyclerView reactieRecyclerView;
     private RecyclerView.Adapter reactieAdapter;
     private RecyclerView.LayoutManager reactieLayoutManager;
-
     private String berichtenObjectId;
 
     /** declare for reactiePost*/
@@ -245,6 +244,7 @@ public class BerichtDetailActivity extends AppCompatActivity {
 
     }
 
+    //get berichtinfo from choosen bericht
     private void BerichtenObjectWasRetrievedSuccessfully(ParseObject bericht) {
         String berichtTitel=bericht.get("titel").toString();
         String berichtInleiding=bericht.get("inleiding").toString();

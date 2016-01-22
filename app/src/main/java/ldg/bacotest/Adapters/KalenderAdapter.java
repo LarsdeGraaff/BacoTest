@@ -1,6 +1,7 @@
 package ldg.bacotest.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ldg.bacotest.Activities.KalenderDetailActivity;
 import ldg.bacotest.R;
 import ldg.bacotest.entities.Kalender;
 
@@ -36,20 +38,55 @@ public class KalenderAdapter extends RecyclerView.Adapter<KalenderAdapter.ViewHo
         Kalender kalender=mDataset.get(position);
         holder.textViewThuisPloeg.setText(kalender.getThuisPloeg());
         holder.textViewUitploeg.setText(kalender.getUitPloeg());
+        holder.textViewDatum.setText(kalender.getDatum());
+        holder.textViewUur.setText(kalender.getUur());
+        holder.textViewPlaats.setText(kalender.getPlaats());
+        holder.textviewScoreThuis.setText(kalender.getScoreThuis());
+        holder.textviewScoreUit.setText(kalender.getScoreUit());
 
     }
 
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView textViewThuisPloeg;
         private TextView textViewUitploeg;
+        private TextView textViewDatum;
+        private TextView textViewUur;
+        private TextView textViewPlaats;
+        private TextView textviewScoreThuis;
+        private TextView textviewScoreUit;
+        private TextView textViewGoToStats;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             textViewThuisPloeg= (TextView) itemView.findViewById(R.id.textview_kalender_thuisploeg);
             textViewUitploeg= (TextView) itemView.findViewById(R.id.textview_kalender_uitploeg);
+            textViewDatum= (TextView) itemView.findViewById(R.id.textview_kalender_date);
+            textViewUur= (TextView) itemView.findViewById(R.id.textview_kalender_uur);
+            textViewPlaats= (TextView) itemView.findViewById(R.id.textview_kalender_plaats);
+            textviewScoreThuis= (TextView) itemView.findViewById(R.id.textview_kalender_score_thuisploeg);
+            textviewScoreUit= (TextView) itemView.findViewById(R.id.textview_kalender_score_uitploeg);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent=new Intent(context, KalenderDetailActivity.class);
+            Kalender kalender=mDataset.get(getLayoutPosition());
+            intent.putExtra("objectId", kalender.getObjectId());
+            intent.putExtra("thuisPloeg", kalender.getThuisPloeg());
+            intent.putExtra("uitPloeg", kalender.getUitPloeg());
+            intent.putExtra("datum", kalender.getDatum());
+            intent.putExtra("uur", kalender.getUur());
+            intent.putExtra("plaats", kalender.getPlaats());
+            intent.putExtra("scoreThuisPloeg",kalender.getScoreThuis());
+            intent.putExtra("scoreUitPloeg",kalender.getScoreUit());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
         }
     }
 

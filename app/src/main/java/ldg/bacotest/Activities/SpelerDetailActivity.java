@@ -3,6 +3,8 @@ package ldg.bacotest.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -15,8 +17,11 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+import ldg.bacotest.Adapters.SpelerStatsAdapter;
 import ldg.bacotest.R;
+import ldg.bacotest.entities.MatchStats;
 import ldg.bacotest.entities.Speler;
+import ldg.bacotest.entities.SpelerStats;
 
 /**
  * Created by Lars on 6/10/2015.
@@ -24,11 +29,20 @@ import ldg.bacotest.entities.Speler;
 public class SpelerDetailActivity extends AppCompatActivity {
     private String playerObjectId;
 
+    /** initialize for method to retrieve data from parse to put them in a list and adapter*/
+    private List<SpelerStats> dataSpelerStatsList;
+    private RecyclerView spelerStatsRecyclerView;
+    private RecyclerView.Adapter spelerStatsAdapter;
+    private RecyclerView.LayoutManager spelerStatsLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_speler_detail);
+
+        spelerStatsRecyclerView= (RecyclerView) findViewById(R.id.my_recycler_view_speler_stats);
+        retrievePlayerStatsFromParseDatabase();
 
 
         /** get info from card from SpelerActivity */
@@ -67,5 +81,47 @@ public class SpelerDetailActivity extends AppCompatActivity {
         textViewPositie.setText(positie);
         textViewVoet.setText(voet);
         textViewLeeftijd.setText(leeftijd);
+    }
+
+    private void retrievePlayerStatsFromParseDatabase() {
+
+        final ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("MatchStats");
+        final List<SpelerStats> parsedPlayerStats = new ArrayList<>();
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e ==null){
+                    for (ParseObject spelerStat : list){
+                        ParseObject parseObjectSpelerId = (ParseObject) spelerStat.get("spelerId");
+                        String spelerId = parseObjectSpelerId.getObjectId().toString();
+
+                        if (playerObjectId.equals(spelerId)){
+
+                            String goals= spelerStat.get("goals").toString();
+                            String assists= spelerStat.get("assists").toString();
+                            String objectId=spelerStat.getObjectId();
+
+                            SpelerStats spelerStatsObject=new SpelerStats();
+                            spelerStatsObject.setGoals(goals);
+                            spelerStatsObject.setAssists(assists);
+                            spelerStatsObject.setObjectId(objectId);
+
+                            parsedPlayerStats.add(spelerStatsObject);
+                        }
+                    }
+                    dataSpelerStatsList=parsedPlayerStats;
+                } else {
+                    Log.e("retrieving error", "Shit went wrong when trying to get spelerstats from Parse.com");
+
+                }
+
+                spelerStatsAdapter=new SpelerStatsAdapter(dataSpelerStatsList,getBaseContext());
+                spelerStatsLayoutManager=new LinearLayoutManager(getBaseContext());
+                spelerStatsRecyclerView.setLayoutManager(spelerStatsLayoutManager);
+                spelerStatsRecyclerView.setAdapter(spelerStatsAdapter);
+
+            }
+        });
     }
 }

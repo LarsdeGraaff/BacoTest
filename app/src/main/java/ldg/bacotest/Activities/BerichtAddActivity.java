@@ -1,5 +1,8 @@
 package ldg.bacotest.Activities;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -11,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,14 +26,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -71,8 +71,6 @@ public class BerichtAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bericht_add);
 
-
-
         /* navigation drawer */
         bacoDrawerList = (ListView) findViewById(R.id.baco_navigation_list);
         bacoDrawerLayout = (DrawerLayout) findViewById(R.id.baco_drawer_layout);
@@ -94,6 +92,8 @@ public class BerichtAddActivity extends AppCompatActivity {
         imageViewFoto = (ImageView) findViewById(R.id.imageViewTakenPicture);
 
 
+
+
         /** Commit post message*/
         buttonPostBericht.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,14 +101,11 @@ public class BerichtAddActivity extends AppCompatActivity {
                 String inputBerichtTitel = editTextAddBerichtTitel.getText().toString();
                 String inputBerichtContent = editTextAddBerichtContent.getText().toString();
                 String inputBerichtInleiding = editTextAddBerichtInleiding.getText().toString();
-                
-
 
                 if (TextUtils.isEmpty(inputBerichtTitel) || TextUtils.isEmpty(inputBerichtInleiding) || TextUtils.isEmpty(inputBerichtContent)) {
                     if (TextUtils.isEmpty(inputBerichtTitel)) {
                         editTextAddBerichtTitel.setError("Title can't be empty");
                     }
-
 
                     if (TextUtils.isEmpty(inputBerichtInleiding)) {
                         editTextAddBerichtInleiding.setError("Content can't be empty");
@@ -118,10 +115,14 @@ public class BerichtAddActivity extends AppCompatActivity {
                         editTextAddBerichtContent.setError("Content can't be empty");
                     }
                 } else {
+
+
+
                     ParseObject parseObject = new ParseObject("Berichten");
                     parseObject.put("titel", editTextAddBerichtTitel.getText().toString());
                     parseObject.put("inleiding", editTextAddBerichtInleiding.getText().toString());
                     parseObject.put("bericht", editTextAddBerichtContent.getText().toString());
+                   // parseObject.put("fotoBericht",file);
 
 
                     ParseUser user = ParseUser.getCurrentUser();
@@ -133,6 +134,40 @@ public class BerichtAddActivity extends AppCompatActivity {
 
                         parseObject.put("userId", unknownUser);
                     }
+
+                    String usernamefornotification=user.getUsername();
+
+                    /** notification when post new message*/
+                    // build notification
+
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(getBaseContext().getApplicationContext())
+                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .setContentTitle("Niew bericht van: " + usernamefornotification)
+                                    .setContentText(inputBerichtTitel);
+
+                    //notification onClick action:
+                    Intent resultIntent = new Intent(getBaseContext(), HomeActivity.class);
+                    PendingIntent resultPendingIntent =
+                            PendingIntent.getActivity(
+                                    getBaseContext().getApplicationContext(),
+                                    0,
+                                    resultIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+
+                    // Sets an ID for the notification
+                    int mNotificationId = 001;
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
+
+                    mBuilder.setAutoCancel(true);
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    /** */
 
 
                     parseObject.saveInBackground();
@@ -148,7 +183,27 @@ public class BerichtAddActivity extends AppCompatActivity {
 
     }
 
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+
+    private byte[] readInFile(String path) throws IOException {
+        // TODO Auto-generated method stub
+        byte[] data = null;
+        File file = new File(path);
+        InputStream input_stream = new BufferedInputStream(new FileInputStream(
+                file));
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        data = new byte[16384]; // 16K
+        int bytes_read;
+        while ((bytes_read = input_stream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, bytes_read);
+        }
+        input_stream.close();
+        return buffer.toByteArray();
+
+    }
+
+    /** Take picture or go to gallery*/
+
+
     private Uri fileUri;
 
     private static final int CAMERA_REQUEST = 1888;
@@ -166,7 +221,7 @@ public class BerichtAddActivity extends AppCompatActivity {
         //Specify the URI of your file as output directory for the picture
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         // start the image capture Intent
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, CAMERA_REQUEST);
     }
 
     @Override
@@ -195,13 +250,14 @@ public class BerichtAddActivity extends AppCompatActivity {
                 break;
 
             case CAMERA_REQUEST:
-                if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                if (requestCode == CAMERA_REQUEST) {
                     if (resultCode == RESULT_OK) {
                         // Image captured and saved to fileUri specified in the Intent
-                        Toast.makeText(this, "Image saved to:\n" +
-                                data.getData(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Image saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
                         Bitmap bitmapPhoto = (Bitmap) data.getExtras().get("data");
                         imageViewFoto.setImageBitmap(bitmapPhoto);
+
+
 
                     } else if (resultCode == RESULT_CANCELED) {
                         // User cancelled the image capture
@@ -209,7 +265,7 @@ public class BerichtAddActivity extends AppCompatActivity {
                         // Image capture failed, advise user
                     }
                 }
-                break;
+
         }
     }
 

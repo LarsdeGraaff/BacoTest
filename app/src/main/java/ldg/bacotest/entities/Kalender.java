@@ -9,6 +9,11 @@ public class Kalender {
     private String uitPloeg;
     private String plaats;
     private String uur;
+    private String datum;
+    private String kalenderDetailId;
+    private String scoreThuis;
+    private String scoreUit;
+
 
     public Kalender() {
     }
@@ -51,5 +56,37 @@ public class Kalender {
 
     public void setUur(String uur) {
         this.uur = uur;
+    }
+
+    public String getDatum() {
+        return datum;
+    }
+
+    public void setDatum(String datum) {
+        this.datum = datum;
+    }
+
+    public String getKalenderDetailId() {
+        return kalenderDetailId;
+    }
+
+    public void setKalenderDetailId(String kalenderDetailId) {
+        this.kalenderDetailId = kalenderDetailId;
+    }
+
+    public String getScoreThuis() {
+        return scoreThuis;
+    }
+
+    public void setScoreThuis(String scoreThuis) {
+        this.scoreThuis = scoreThuis;
+    }
+
+    public String getScoreUit() {
+        return scoreUit;
+    }
+
+    public void setScoreUit(String scoreUit) {
+        this.scoreUit = scoreUit;
     }
 }

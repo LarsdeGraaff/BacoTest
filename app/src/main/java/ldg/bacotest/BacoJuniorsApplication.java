@@ -13,6 +13,7 @@ public class BacoJuniorsApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //initialize to parsedatabase (for notifications)
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "1QuEhhYIyNqj55c6x0SwZvh49r6dIZrQldG8OD1Y", "mlFdqHdYeTg2u0jlm3Ds4cahzVPvtEQy8s2w9HnY");
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);

@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -35,19 +37,26 @@ import ldg.bacotest.entities.Kalender;
  * Created by Lars on 5/10/2015.
  */
 public class KalenderActivity extends AppCompatActivity {
-    /** Initialize navigation Drawer*/
+    private Toolbar toolbar;
+    private String kalenderObjectId;
+    /**
+     * Initialize navigation Drawer
+     */
     private ArrayAdapter<String> bacoAdapter;
     private DrawerLayout bacoDrawerLayout;
     private ListView bacoDrawerList;
     private String mActivityTitle;
     private ActionBarDrawerToggle bacoDrawertoggle;
-    /** Initialize recyclerview*/
+    /**
+     * Initialize recyclerview
+     */
     private RecyclerView recyclerView;
-    /** initialize for method to retrieve data from parse to put them in a list and adapter*/
+    /**
+     * initialize for method to retrieve data from parse to put them in a list and adapter
+     */
     private List<Kalender> kalenderList;
     private RecyclerView.Adapter kalenderAdapter;
     private RecyclerView.LayoutManager kalenderLayoutManager;
-
 
 
     @Override
@@ -55,53 +64,69 @@ public class KalenderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kalender);
      /* navigation drawer */
-        bacoDrawerLayout= (DrawerLayout) findViewById(R.id.baco_drawer_layout);
-        mActivityTitle=getTitle().toString();
-        bacoDrawerList= (ListView) findViewById(R.id.baco_navigation_list);
+        bacoDrawerLayout = (DrawerLayout) findViewById(R.id.baco_drawer_layout);
+        mActivityTitle = getTitle().toString();
+        bacoDrawerList = (ListView) findViewById(R.id.baco_navigation_list);
 
         addDrawerItems();
         setupDrawerItems();
 
+        /* toolbar */
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
         /* RecyclerView Kalender*/
-        recyclerView= (RecyclerView) findViewById(R.id.my_recycler_view_kalender);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_kalender);
         retrievekalenderItemsFromParseDatabase();
 
     }
 
     private void retrievekalenderItemsFromParseDatabase() {
-        ParseQuery parseQuery=new ParseQuery("Kalender");
+        final ParseQuery parseQuery = new ParseQuery("Kalender");
 
-        final List<Kalender> parsedKalender=new ArrayList<>();
+
+        final List<Kalender> parsedKalender = new ArrayList<>();
 
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> kalenderitems, ParseException e) {
-                if (e==null){
-                    for (ParseObject kalender:kalenderitems ){
-                        String thuisPloeg=kalender.get("thuisPloeg").toString();
-                        String uitPloeg=kalender.get("uitPloeg").toString();
-                        String objectId=kalender.getObjectId();
+                if (e == null) {
+                    for (ParseObject kalender : kalenderitems) {
+                        //parseQuery.include("kalenderId");
+                        String thuisPloeg = kalender.get("thuisPloeg").toString();
+                        String uitPloeg = kalender.get("uitPloeg").toString();
+                        String datum = kalender.get("datum").toString();
+                        String uur = kalender.get("uur").toString();
+                        String plaats = kalender.get("plaats").toString();
+                        String thuisScore = kalender.get("scoreThuisPloeg").toString();
+                        String uitScore = kalender.get("scoreUitPloeg").toString();
+                        String objectId = kalender.getObjectId();
 
-                        Kalender kalender1=new Kalender();
+                        /////////////////
+                        ////////////////
+
+                        Kalender kalender1 = new Kalender();
                         kalender1.setThuisPloeg(thuisPloeg);
                         kalender1.setUitPloeg(uitPloeg);
+                        kalender1.setDatum(datum);
+                        kalender1.setUur(uur);
+                        kalender1.setPlaats(plaats);
+                        kalender1.setScoreThuis(thuisScore);
+                        kalender1.setScoreUit(uitScore);
                         kalender1.setObjectId(objectId);
 
                         parsedKalender.add(kalender1);
                     }
 
-                    kalenderList=parsedKalender;
-                }
-
-                else {
+                    kalenderList = parsedKalender;
+                } else {
                     Log.e("error", "something went wrong retrieving berichten from parse");
                 }
-                kalenderAdapter=new KalenderAdapter(kalenderList,getBaseContext());
-                kalenderLayoutManager=new LinearLayoutManager(getBaseContext());
+                kalenderAdapter = new KalenderAdapter(kalenderList, getBaseContext());
+                kalenderLayoutManager = new LinearLayoutManager(getBaseContext());
                 recyclerView.setLayoutManager(kalenderLayoutManager);
                 recyclerView.setAdapter(kalenderAdapter);
             }
@@ -113,8 +138,8 @@ public class KalenderActivity extends AppCompatActivity {
     }
 
     private void setupDrawerItems() {
-        String[] navigationMenuArray = {"HOME", "SPELERS","KALENDER","RANGSCHIKKING"};
-        bacoAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, navigationMenuArray);
+        String[] navigationMenuArray = {"HOME", "SPELERS", "KALENDER", "RANGSCHIKKING"};
+        bacoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navigationMenuArray);
         bacoDrawerList.setAdapter(bacoAdapter);
         bacoDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,7 +167,7 @@ public class KalenderActivity extends AppCompatActivity {
     }
 
     private void addDrawerItems() {
-        bacoDrawertoggle=new ActionBarDrawerToggle(this,bacoDrawerLayout,R.string.open,R.string.close){
+        bacoDrawertoggle = new ActionBarDrawerToggle(this, bacoDrawerLayout, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -173,9 +198,10 @@ public class KalenderActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         bacoDrawertoggle.onConfigurationChanged(newConfig);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_log_in, menu);
+        getMenuInflater().inflate(R.menu.menu_kalender, menu);
         return true;
     }
 
@@ -188,7 +214,9 @@ public class KalenderActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** actions onclick on drawerlist*/
+    /**
+     * actions onclick on drawerlist
+     */
     private void spelersActivity(View view) {
         Intent intent = new Intent(this, SpelerActivity.class);
         startActivity(intent);
@@ -203,14 +231,18 @@ public class KalenderActivity extends AppCompatActivity {
     }
 
     private void rangschikkingActivity(View view) {
-        Intent intent=new Intent(this,RangschikkingActivity.class);
+        Intent intent = new Intent(this, RangschikkingActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void kalenderActivity(View view) {
-        Intent intent=new Intent(this, KalenderActivity.class);
+        Intent intent = new Intent(this, KalenderActivity.class);
         startActivity(intent);
         finish();
     }
+
+
+
+
 }

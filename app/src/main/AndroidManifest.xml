@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ldg.bacotest" >
+    package="ldg.bacotest">
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!--
       IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
@@ -24,29 +26,55 @@
     <application
         android:name=".BacoJuniorsApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/baco"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.LogInActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.HomeActivity"/>
-        <activity android:name=".Activities.SpelerActivity"/>
-        <activity android:name=".Activities.KalenderActivity"/>
-        <activity android:name=".Activities.RangschikkingActivity"/>
-        <activity android:name=".Activities.SpelerDetailActivity"/>
-        <activity android:name=".Activities.RegistrationActivity"/>
-        <activity android:name=".Activities.ForgotPasswordActivity"/>
-        <activity android:name=".Activities.BerichtDetailActivity"/>
+        <activity android:name=".Activities.HomeActivity" />
+        <activity android:name=".Activities.SpelerActivity" />
+        <activity android:name=".Activities.KalenderActivity" />
+        <activity android:name=".Activities.RangschikkingActivity" />
+        <activity android:name=".Activities.SpelerDetailActivity" />
+        <activity android:name=".Activities.RegistrationActivity" />
+        <activity android:name=".Activities.ForgotPasswordActivity" />
+        <activity android:name=".Activities.BerichtDetailActivity" />
         <activity android:name=".Activities.BerichtAddActivity" />
+        <activity android:name=".Activities.KalenderDetailActivity"/>
+        <activity android:name=".Activities.WedstrijdStatistiekenActivity"/>
 
 
+        <service android:name="com.parse.PushService" />
+
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <!--
+                  IMPORTANT: Change "com.parse.starter" to match your app's package name.
+                -->
+                <category android:name="ldg.bacotest" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

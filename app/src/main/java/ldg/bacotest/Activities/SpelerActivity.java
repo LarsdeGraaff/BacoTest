@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import ldg.bacotest.entities.Statistieken;
  * Created by Lars on 5/10/2015.
  */
 public class SpelerActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     /** Initialize navigation Drawer*/
     private DrawerLayout bacoDrawerLayout;
     private String mActivityTitle;
@@ -62,6 +64,9 @@ public class SpelerActivity extends AppCompatActivity {
         addDawerItems();
         setupDrawer();
 
+     /* toolbar */
+        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -192,7 +197,7 @@ public class SpelerActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_log_in, menu);
+        getMenuInflater().inflate(R.menu.menu_spelers, menu);
         return true;
     }
 

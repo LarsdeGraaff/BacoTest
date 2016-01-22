@@ -115,7 +115,6 @@ public class HomeActivity extends AppCompatActivity {
                         unknownUser.setUsername("unknown username");
 
 
-                        ParseUser user = (ParseUser) bericht.get("userId");
                         ParseUser reactieUser = null;
                         try {
                             reactieUser = ParseUser.createWithoutData(ParseUser.class, userId).fetchIfNeeded();

@@ -6,6 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -42,6 +45,8 @@ public class BerichtAdapter extends RecyclerView.Adapter<BerichtAdapter.ViewHold
         holder.textViewBerichtUser.setText(bericht.getUserId());
         holder.textViewBerichtTitel.setText(bericht.getTitel());
         holder.textViewBerichtInleiding.setText(bericht.getInleiding());
+        holder.textViewTimestamp.setText(bericht.getTimestamp());
+
 
     }
 
@@ -54,12 +59,18 @@ public class BerichtAdapter extends RecyclerView.Adapter<BerichtAdapter.ViewHold
         private TextView textViewBerichtTitel;
         private TextView textViewBerichtInleiding;
         private TextView textViewBerichtUser;
+        private TextView textViewTimestamp;
+
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             textViewBerichtUser = (TextView) itemView.findViewById(R.id.textview_home_bericht_user);
             textViewBerichtTitel = (TextView) itemView.findViewById(R.id.textview_home_bericht_titel);
             textViewBerichtInleiding = (TextView) itemView.findViewById(R.id.textview_home_bericht_inleiding);
+            textViewTimestamp= (TextView) itemView.findViewById(R.id.textview_home_bericht_timestamp);
+
+
             itemView.setOnClickListener(this);
         }
 
@@ -73,6 +84,7 @@ public class BerichtAdapter extends RecyclerView.Adapter<BerichtAdapter.ViewHold
             intent.putExtra("inleiding", berichten.getInleiding());
             intent.putExtra("bericht", berichten.getBericht());
             intent.putExtra("userId", berichten.getUserId());
+            intent.putExtra("createdAt",berichten.getTimestamp());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 

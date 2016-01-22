@@ -5,6 +5,11 @@
     <string name="action_settings">Settings</string>
     <string name="open">OPEN</string>
     <string name="close">CLOSE</string>
+    <string-array name="message_options">
+        <item>Bericht</item>
+        <item>Selectie</item>
+        <item>Resultaat</item>
+    </string-array>
 
 
 </resources>
