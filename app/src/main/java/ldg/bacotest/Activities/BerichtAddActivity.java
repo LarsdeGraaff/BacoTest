@@ -5,17 +5,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -29,18 +25,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import ldg.bacotest.R;
 
@@ -50,6 +42,8 @@ import ldg.bacotest.R;
 public class BerichtAddActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ParseFile photoFile;
+    private String berichtObjectId;
+    private String fotoObjectIdForNewMessage;
 
 
     /**
@@ -98,6 +92,10 @@ public class BerichtAddActivity extends AppCompatActivity {
         imageViewFoto = (ImageView) findViewById(R.id.imageViewTakenPicture);
         confirmPicture = (Button) findViewById(R.id.button_confirm_picture);
 
+        /** get objectId from picture*/
+        final Intent intent = getIntent();
+        fotoObjectIdForNewMessage=intent.getStringExtra("fotoObjectId");
+
         confirmPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +120,8 @@ public class BerichtAddActivity extends AppCompatActivity {
                 String inputBerichtTitel = editTextAddBerichtTitel.getText().toString();
                 String inputBerichtContent = editTextAddBerichtContent.getText().toString();
                 String inputBerichtInleiding = editTextAddBerichtInleiding.getText().toString();
+               // String inputBerichtFotoObjectId=fotoObjectIdForNewMessage.toString();
+
 
                 if (TextUtils.isEmpty(inputBerichtTitel) || TextUtils.isEmpty(inputBerichtInleiding) || TextUtils.isEmpty(inputBerichtContent)) {
                     if (TextUtils.isEmpty(inputBerichtTitel)) {
@@ -142,6 +142,8 @@ public class BerichtAddActivity extends AppCompatActivity {
                     parseObject.put("titel", editTextAddBerichtTitel.getText().toString());
                     parseObject.put("inleiding", editTextAddBerichtInleiding.getText().toString());
                     parseObject.put("bericht", editTextAddBerichtContent.getText().toString());
+                    ParseObject foto = ParseObject.createWithoutData("BerichtFoto", fotoObjectIdForNewMessage);
+                    parseObject.put("berichtFotoId",foto);
                     // parseObject.put("fotoBericht",file);
 
 
@@ -154,6 +156,9 @@ public class BerichtAddActivity extends AppCompatActivity {
 
                         parseObject.put("userId", unknownUser);
                     }
+
+
+
 
                     String usernamefornotification = user.getUsername();
 
@@ -191,6 +196,18 @@ public class BerichtAddActivity extends AppCompatActivity {
 
 
                     parseObject.saveInBackground();
+
+                      /* go to picture intent to add picture to message */
+
+
+
+                    /////
+
+
+
+
+
+
                     Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                     startActivity(intent);
                     Toast.makeText(getBaseContext(), "Bericht has been added to the list", Toast.LENGTH_LONG).show();
@@ -202,109 +219,6 @@ public class BerichtAddActivity extends AppCompatActivity {
 
 
     }
-
-
-    private byte[] readInFile(String path) throws IOException {
-        // TODO Auto-generated method stub
-        byte[] data = null;
-        File file = new File(path);
-        InputStream input_stream = new BufferedInputStream(new FileInputStream(
-                file));
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        data = new byte[16384]; // 16K
-        int bytes_read;
-        while ((bytes_read = input_stream.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, bytes_read);
-        }
-        input_stream.close();
-        return buffer.toByteArray();
-
-    }
-
-    /**
-     * Take picture or go to gallery
-     */
-
-
-    private Uri fileUri;
-
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int SELECT_PHOTO = 100;
-
-    public void goToGalleryPicture(View view) {
-        Intent photointent = new Intent(getIntent().ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        photointent.setType("image/*");
-        startActivityForResult(photointent, SELECT_PHOTO);
-    }
-
-    public void goToTakePicture(View view) {
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //Specify the URI of your file as output directory for the picture
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        // start the image capture Intent
-        startActivityForResult(intent, CAMERA_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case SELECT_PHOTO:
-
-
-                if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && null != data) {
-                    Uri selectedImage = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                    Cursor cursor = getContentResolver().query(selectedImage,
-                            filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    imageViewFoto.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
-                }
-
-                break;
-
-            case CAMERA_REQUEST:
-                if (requestCode == CAMERA_REQUEST) {
-                    if (resultCode == RESULT_OK) {
-                        // Image captured and saved to fileUri specified in the Intent
-                        Toast.makeText(this, "Image saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
-                        Bitmap bitmapPhoto = (Bitmap) data.getExtras().get("data");
-                        ByteArrayOutputStream stream=new ByteArrayOutputStream();
-                        bitmapPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        byte[] dataPhoto=stream.toByteArray();
-
-
-                        ParseFile file=new ParseFile("foto.jpg",dataPhoto);
-                        file.saveInBackground();
-
-                        ParseObject foto= new ParseObject("BerichtFoto");
-                        foto.put("picture",file);
-                        foto.saveInBackground();
-
-
-                        imageViewFoto.setImageBitmap(bitmapPhoto);
-
-
-                    } else if (resultCode == RESULT_CANCELED) {
-                        // User cancelled the image capture
-                    } else {
-                        // Image capture failed, advise user
-                    }
-                }
-
-        }
-    }
-
-
-
 
 
     /**
@@ -420,5 +334,22 @@ public class BerichtAddActivity extends AppCompatActivity {
         Intent intent = new Intent(this, KalenderActivity.class);
         startActivity(intent);
         finish();
+    }
+    public void goToActivityPicture(View view){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Berichten");
+        query.getInBackground(berichtObjectId, new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e!=null){
+                            Intent intent = new Intent(getBaseContext(), PictureActivity.class);
+                            intent.putExtra("objectId", berichtObjectId);
+                            startActivity(intent);
+                        }
+                    }
+                });
+
+
+
+
     }
 }
