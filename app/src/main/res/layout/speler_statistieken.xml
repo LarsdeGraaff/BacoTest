@@ -8,8 +8,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:elevation="10dp"
         android:foregroundGravity="center"
 
@@ -22,20 +22,28 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="     " />
-
-            <TextView
-                android:id="@+id/textview_speler_stats_tegenstander"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="tegenstander" />
+                android:id="@+id/textview_speler_stats_thuisploeg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="thuis" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="       /            " />
+                android:text="  -  " />
+
+            <TextView
+                android:id="@+id/textview_speler_stats_uitploeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="uit" />
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/            " />
 
             <TextView
                 android:id="@+id/textview_speler_stats_goals"
