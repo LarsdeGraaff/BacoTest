@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,23 +19,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import ldg.bacotest.Adapters.BerichtAdapter;
 import ldg.bacotest.R;
 import ldg.bacotest.entities.Berichten;
-import ldg.bacotest.entities.Speler;
 
 /**
  * Created by Lars on 5/10/2015.
@@ -46,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     private View view;
     private Toolbar toolbar;
     private String userName;
+    private String berichtObjectId;
     /**
      * Initialize navigation Drawer
      */
@@ -74,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
         /* navigation drawer */
         bacoDrawerList = (ListView) findViewById(R.id.baco_navigation_list);
         bacoDrawerLayout = (DrawerLayout) findViewById(R.id.baco_drawer_layout);
-        mActivityTitle = getTitle().toString();
+        //mActivityTitle = getTitle().toString();
         addDawerItems();
         setupDrawer();
 
@@ -87,6 +84,11 @@ public class HomeActivity extends AppCompatActivity {
         /* */
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_home);
         retrieveBerichtenFromParseDatabase();
+
+
+
+
+
     }
 
     private void retrieveBerichtenFromParseDatabase() {
@@ -101,19 +103,18 @@ public class HomeActivity extends AppCompatActivity {
                 if (e == null) {
                     for (ParseObject bericht : berichten) {
                         parseQuery.include("userId");
+                        parseQuery.include("berichtFotoId");
                         String titel = bericht.get("titel").toString();
                         String berichtInleiding = bericht.get("inleiding").toString();
                         String berichtContent = bericht.get("bericht").toString();
                         String berichtTimestamp=bericht.getCreatedAt().toString();
                         String objectId = bericht.getObjectId();
 
-
                         ParseUser userObject = (ParseUser) bericht.get("userId");
                         String userId = userObject.getObjectId();
 
                         ParseUser unknownUser = new ParseUser();
                         unknownUser.setUsername("unknown username");
-
 
                         ParseUser reactieUser = null;
                         try {
@@ -122,6 +123,10 @@ public class HomeActivity extends AppCompatActivity {
                             e1.printStackTrace();
                         }
                         String userName = reactieUser.getUsername();
+
+                        /** trying to retrieve foto*/
+                      //  ParseObject fotoFile= (ParseObject) bericht.get("berichtFotoId");
+                     //   String fotoFileId=fotoFile.getObjectId();
 
 
                         Berichten newBericht = new Berichten();
@@ -191,14 +196,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("MENU");
+                //getSupportActionBar().setTitle("MENU");
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getSupportActionBar().setTitle(mActivityTitle);
+                //getSupportActionBar().setTitle(mActivityTitle);
             }
         };
 
@@ -238,9 +243,16 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.action_settings_login:
                 return true;
 
+
             case R.id.action_new_message:
                 Toast.makeText(getBaseContext(),"Nieuw bericht",Toast.LENGTH_LONG).show();
                 goToNieuwBericht(view);
+                return true;
+
+            case R.id.action_new_message_with_picture:
+                Toast.makeText(getBaseContext(),"Nieuw bericht MET foto",Toast.LENGTH_LONG).show();
+
+                goToNieuwBerichtMetFoto(view);
                 return true;
 
             default:
@@ -284,6 +296,12 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToNieuwBerichtMetFoto(View view){
+        Intent intent=new Intent(this,PictureActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     //logout function
     public void logOut(View view){
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -297,6 +315,19 @@ public class HomeActivity extends AppCompatActivity {
         currentUser.logOut();
         Intent intent = new Intent(getBaseContext(), LogInActivity.class);
         startActivity(intent);
+    }
+
+    public void goToAddPictureIntent (View view){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Berichten");
+        query.getInBackground(berichtObjectId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null){
+                    String currentUser = ParseUser.getCurrentUser().getObjectId();
+                }
+            }
+        });
+
     }
 
 }

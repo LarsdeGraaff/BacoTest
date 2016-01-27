@@ -19,8 +19,6 @@ import java.util.List;
 
 import ldg.bacotest.Adapters.SpelerStatsAdapter;
 import ldg.bacotest.R;
-import ldg.bacotest.entities.MatchStats;
-import ldg.bacotest.entities.Speler;
 import ldg.bacotest.entities.SpelerStats;
 
 /**
@@ -96,13 +94,31 @@ public class SpelerDetailActivity extends AppCompatActivity {
                         ParseObject parseObjectSpelerId = (ParseObject) spelerStat.get("spelerId");
                         String spelerId = parseObjectSpelerId.getObjectId().toString();
 
+                        ParseObject parseObjectkalenderId = (ParseObject) spelerStat.get("kalenderId");
+                        String kalenderId = parseObjectkalenderId.getObjectId().toString();
+
                         if (playerObjectId.equals(spelerId)){
 
                             String goals= spelerStat.get("goals").toString();
                             String assists= spelerStat.get("assists").toString();
                             String objectId=spelerStat.getObjectId();
 
+
+                            ParseObject tegenstander=null;
+                            try {
+                                 tegenstander = ParseObject.createWithoutData("Kalender", kalenderId).fetchIfNeeded();
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            String spelerStatsThuisploeg=tegenstander.get("thuisPloeg").toString();
+                            String spelerStatsuitploeg=tegenstander.get("uitPloeg").toString();
+
+
+
                             SpelerStats spelerStatsObject=new SpelerStats();
+                            spelerStatsObject.setThuisploeg(spelerStatsThuisploeg);
+                            spelerStatsObject.setUitploeg(spelerStatsuitploeg);
                             spelerStatsObject.setGoals(goals);
                             spelerStatsObject.setAssists(assists);
                             spelerStatsObject.setObjectId(objectId);

@@ -31,28 +31,6 @@
                     android:hint="Bericht Titel"
                     android:paddingTop="50dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/login_button"
-                    android:onClick="goToTakePicture"
-                    android:text="take picture"
-                    android:layout_marginRight="30dp"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/login_button"
-                    android:onClick="goToGalleryPicture"
-                    android:text="gallery picture" />
-
-                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageViewTakenPicture"
@@ -61,14 +39,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp" />
 
-                <Button
-                    android:id="@+id/button_confirm_picture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/login_button"
-                    android:onClick="confirm_picture"
-                    android:text="confirm picture" />
 
                 <EditText
                     android:id="@+id/editText_bericht_add_inleiding"
@@ -82,6 +52,14 @@
                     android:layout_height="wrap_content"
                     android:hint="Bericht Content"
                     android:paddingTop="50dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+
+                >
 
                 <Button
                     android:id="@+id/button_add_bericht_post_bericht"
@@ -101,6 +79,7 @@
                     android:text="Back"
 
                     />
+                </LinearLayout>
 
 
             </LinearLayout>

@@ -90,7 +90,6 @@ public class BerichtAddActivity extends AppCompatActivity {
         editTextAddBerichtInleiding = (EditText) findViewById(R.id.editText_bericht_add_inleiding);
         buttonPostBericht = (Button) findViewById(R.id.button_add_bericht_post_bericht);
         imageViewFoto = (ImageView) findViewById(R.id.imageViewTakenPicture);
-        confirmPicture = (Button) findViewById(R.id.button_confirm_picture);
 
         /** get objectId from picture*/
         final Intent intent = getIntent();
@@ -216,7 +215,6 @@ public class BerichtAddActivity extends AppCompatActivity {
         });
 
         /**  test save picture in parse,*/
-
 
     }
 

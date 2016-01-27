@@ -42,16 +42,31 @@
                     android:layout_marginRight="5dp"
                     android:orientation="vertical">
 
+
+
                     <TextView
                         android:id="@+id/textview_bericht_detail_titel"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
                         android:paddingBottom="10dp"
                         android:text="TITEL"
                         android:textSize="25sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textview_bericht_detail_add_picture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="add pic"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/login_button"
+                        android:onClick="goToAddPictureIntent"
+                        />
+
 
                     <TextView
                         android:id="@+id/textview_bericht_detail_inleiding"

@@ -49,6 +49,7 @@
         <activity android:name=".Activities.BerichtAddActivity" />
         <activity android:name=".Activities.KalenderDetailActivity"/>
         <activity android:name=".Activities.WedstrijdStatistiekenActivity"/>
+        <activity android:name=".Activities.PictureActivity"/>
 
 
         <service android:name="com.parse.PushService" />

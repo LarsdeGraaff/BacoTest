@@ -1,11 +1,8 @@
 package ldg.bacotest.entities;
 
-import android.graphics.Bitmap;
-import android.media.Image;
+import android.widget.ImageView;
 
 import com.parse.ParseFile;
-
-import java.io.File;
 
 /**
  * Created by Lars on 8/10/2015.
@@ -17,6 +14,8 @@ public class Berichten {
     private String bericht;
     private String userId;
     private ParseFile foto;
+    private ImageView fotoImageView;
+
     private int aantalReacties;
     private String timestamp;
 
@@ -78,6 +77,14 @@ public class Berichten {
 
     public void setFoto(ParseFile foto) {
         this.foto = foto;
+    }
+
+    public ImageView getFotoImageView() {
+        return fotoImageView;
+    }
+
+    public void setFotoImageView(ImageView fotoImageView) {
+        this.fotoImageView = fotoImageView;
     }
 
 

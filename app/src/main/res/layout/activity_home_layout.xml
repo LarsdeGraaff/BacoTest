@@ -31,20 +31,18 @@
                 android:id="@+id/textview_home_bericht_timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Timestamp"
-                android:textSize="15sp"
                 android:layout_gravity="center_horizontal"
-                />
+                android:text="Timestamp"
+                android:textSize="15sp" />
+
 
             <TextView
                 android:id="@+id/textview_home_bericht_user"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:text="User"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-
 
 
             <TextView
@@ -57,10 +55,10 @@
 
 
             <ImageView
+                android:id="@+id/imageViewHome"
                 android:layout_width="350dp"
                 android:layout_height="200dp"
-                android:src="@drawable/baco"
-                android:id="@+id/imageViewHome" />
+                android:src="@drawable/baco" />
 
             <TextView
                 android:id="@+id/textview_home_bericht_inleiding"

@@ -3,17 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LogInActivity">
 
-
-
-    <item android:id="@+id/action_settings_login"
-        android:title="@string/action_settings"
+    <item
+        android:id="@+id/action_settings_login"
         android:orderInCategory="100"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 
 
-    <item android:id="@+id/action_new_message"
+
+    <item
+        android:id="@+id/action_new_message"
+        android:icon="@drawable/message"
         android:orderInCategory="200"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/new_message"
-        android:title="NB"/>
+        android:title="NB"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_new_message_with_picture"
+        android:icon="@drawable/camericon"
+        android:orderInCategory="300"
+        android:title="NB met foto"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -31,11 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ldg.bacotest.Adapters.MatchStatsAdapter;
-import ldg.bacotest.Adapters.ReactiesAdapter;
 import ldg.bacotest.R;
 import ldg.bacotest.entities.MatchStats;
-import ldg.bacotest.entities.Reacties;
-import ldg.bacotest.entities.Speler;
 
 /**
  * Created by Lars on 5/01/2016.
@@ -230,8 +226,10 @@ public class KalenderDetailActivity extends AppCompatActivity {
     private void retrieveMatchStatsFromParseDatabase() {
 
         final ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("MatchStats");
+
         final List<MatchStats> parsedMatchStatsForSpecificMatch = new ArrayList<>();
 
+        query.include("spelerId");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
@@ -241,6 +239,12 @@ public class KalenderDetailActivity extends AppCompatActivity {
                         ParseObject parseObjectkalenderId = (ParseObject) matchstat.get("kalenderId");
                         String kalenderId = parseObjectkalenderId.getObjectId().toString();
 
+                        //
+                        ParseObject parseObjectSpelerId= (ParseObject) matchstat.get("spelerId");
+                        String spelerId=parseObjectSpelerId.getObjectId();
+
+                        //
+
                         if (kalenderObjectId.equals(kalenderId)) {
                             query.include("spelerId");
                             String goals = matchstat.get("goals").toString();
@@ -248,15 +252,22 @@ public class KalenderDetailActivity extends AppCompatActivity {
                             String objectId = matchstat.getObjectId();
 
                             //
-                            ParseObject parseObjectSpeler = (ParseObject) matchstat.get("spelerId");
-                            String spelerId = parseObjectSpeler.getObjectId();
+                           // ParseObject parseObjectSpeler = (ParseObject) matchstat.get("spelerId");
+                           // String spelersId = parseObjectSpeler.getObjectId();
+                            //leest de spelerId//////////////////////////////////////////////////////////
 
+                            ParseObject spelersnaam = null;
+                            try {
+                                spelersnaam = ParseObject.createWithoutData("Speler", spelerId).fetchIfNeeded();
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                            String naam=spelersnaam.get("voornaam").toString();
 
-
-                            //
+                            ///////////////////////////////////////////////////////////////////////////
 
                             MatchStats matchStatsObject = new MatchStats();
-                            //matchStatsObject.setNaamSpeler(spelersnaam);
+                             matchStatsObject.setNaamSpeler(naam);
                             matchStatsObject.setGoals(goals);
                             matchStatsObject.setAssists(assists);
                             matchStatsObject.setObjectId(objectId);

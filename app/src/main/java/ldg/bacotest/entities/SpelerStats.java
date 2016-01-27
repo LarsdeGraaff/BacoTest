@@ -5,7 +5,8 @@ package ldg.bacotest.entities;
  */
 public class SpelerStats {
     private String objectId;
-    private String tegenstander;
+    private String thuisploeg;
+    private String uitploeg;
     private String goals;
     private String assists;
 
@@ -20,12 +21,20 @@ public class SpelerStats {
         this.objectId = objectId;
     }
 
-    public String getTegenstander() {
-        return tegenstander;
+    public String getThuisploeg() {
+        return thuisploeg;
     }
 
-    public void setTegenstander(String tegenstander) {
-        this.tegenstander = tegenstander;
+    public void setThuisploeg(String thuisploeg) {
+        this.thuisploeg = thuisploeg;
+    }
+
+    public String getUitploeg() {
+        return uitploeg;
+    }
+
+    public void setUitploeg(String uitploeg) {
+        this.uitploeg = uitploeg;
     }
 
     public String getGoals() {

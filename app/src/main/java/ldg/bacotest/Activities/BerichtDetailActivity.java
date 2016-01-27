@@ -30,8 +30,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -308,6 +306,22 @@ public class BerichtDetailActivity extends AppCompatActivity {
         Intent intent=new Intent(this, KalenderActivity.class);
         startActivity(intent);
         finish();
+    }
+
+
+    public void goToAddPictureIntent(View view){
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Berichten");
+        query.getInBackground(berichtenObjectId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e==null){
+                    Intent intent = new Intent(getBaseContext(), PictureActivity.class);
+                    intent.putExtra("objectId", berichtenObjectId);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 

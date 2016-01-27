@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import ldg.bacotest.R;
-import ldg.bacotest.entities.MatchStats;
 import ldg.bacotest.entities.SpelerStats;
 
 /**
@@ -32,7 +31,8 @@ public class SpelerStatsAdapter extends RecyclerView.Adapter<SpelerStatsAdapter.
     @Override
     public void onBindViewHolder(SpelerStatsAdapter.ViewHolder holder, int position) {
         SpelerStats spelerStats=mDataSet.get(position);
-        holder.textViewSpelerStatsTegenstander.setText(spelerStats.getTegenstander());
+        holder.textViewSpelerStatsThuisPloeg.setText(spelerStats.getThuisploeg());
+        holder.textViewSpelerStatsUitPloeg.setText(spelerStats.getUitploeg());
         holder.textViewSpelerStatsGoals.setText(spelerStats.getGoals());
         holder.textViewSpelerStatsAssists.setText(spelerStats.getAssists());
     }
@@ -43,16 +43,18 @@ public class SpelerStatsAdapter extends RecyclerView.Adapter<SpelerStatsAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewSpelerStatsTegenstander;
+
         private TextView textViewSpelerStatsGoals;
         private TextView textViewSpelerStatsAssists;
+        private TextView textViewSpelerStatsThuisPloeg;
+        private TextView textViewSpelerStatsUitPloeg;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            textViewSpelerStatsTegenstander= (TextView) itemView.findViewById(R.id.textview_speler_stats_tegenstander);
             textViewSpelerStatsGoals= (TextView) itemView.findViewById(R.id.textview_speler_stats_goals);
             textViewSpelerStatsAssists= (TextView) itemView.findViewById(R.id.textview_speler_stats_assists);
+            textViewSpelerStatsThuisPloeg= (TextView) itemView.findViewById(R.id.textview_speler_stats_thuisploeg);
+            textViewSpelerStatsUitPloeg= (TextView) itemView.findViewById(R.id.textview_speler_stats_uitploeg);
         }
     }
 
